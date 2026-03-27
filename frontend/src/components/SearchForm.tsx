@@ -6,7 +6,6 @@ interface Props {
   initialV1?: string;
   initialV2?: string;
   onCompare: (pkg: string, v1: string, v2: string) => void;
-  compact?: boolean;
 }
 
 export default function SearchForm({
@@ -14,7 +13,6 @@ export default function SearchForm({
   initialV1 = "",
   initialV2 = "",
   onCompare,
-  compact = false,
 }: Props) {
   const [pkg, setPkg] = useState(initialPkg);
   const [v1, setV1] = useState(initialV1);
@@ -30,7 +28,6 @@ export default function SearchForm({
     try {
       const vs = await fetchVersions(name.trim());
       setVersions(vs.slice().reverse()); // newest first
-      // Auto-select last two if not set
       if (vs.length >= 2) {
         setV1((prev) => prev || vs[vs.length - 2]);
         setV2((prev) => prev || vs[vs.length - 1]);
@@ -43,14 +40,14 @@ export default function SearchForm({
     }
   }, []);
 
-  // Load versions when pkg changes (debounced)
+  // Debounced version fetch as user types package name
   useEffect(() => {
     if (!pkg.trim()) { setVersions([]); return; }
     const t = setTimeout(() => loadVersions(pkg), 600);
     return () => clearTimeout(t);
   }, [pkg, loadVersions]);
 
-  // Load versions on mount if we have an initial package
+  // Load versions on mount if pre-filled
   useEffect(() => {
     if (initialPkg) loadVersions(initialPkg);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -61,50 +58,6 @@ export default function SearchForm({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (canCompare) onCompare(pkg.trim(), v1, v2);
-  }
-
-  if (compact) {
-    return (
-      <form className="topbar-form" onSubmit={handleSubmit}>
-        <input
-          className="form-input"
-          style={{ width: "160px" }}
-          placeholder="Package name"
-          value={pkg}
-          onChange={(e) => { setPkg(e.target.value); setV1(""); setV2(""); setVersions([]); }}
-          spellCheck={false}
-        />
-        <span className="topbar-sep">/</span>
-        <select
-          className="form-select"
-          style={{ width: "130px" }}
-          value={v1}
-          onChange={(e) => setV1(e.target.value)}
-          disabled={!versions.length}
-        >
-          {!versions.length && <option value="">{loadingVersions ? "Loading…" : "v1"}</option>}
-          {versions.map((v) => (
-            <option key={v} value={v}>{v}</option>
-          ))}
-        </select>
-        <span className="topbar-sep">→</span>
-        <select
-          className="form-select"
-          style={{ width: "130px" }}
-          value={v2}
-          onChange={(e) => setV2(e.target.value)}
-          disabled={!versions.length}
-        >
-          {!versions.length && <option value="">{loadingVersions ? "Loading…" : "v2"}</option>}
-          {versions.map((v) => (
-            <option key={v} value={v}>{v}</option>
-          ))}
-        </select>
-        <button className="btn btn-primary btn-sm" type="submit" disabled={!canCompare}>
-          Compare
-        </button>
-      </form>
-    );
   }
 
   return (

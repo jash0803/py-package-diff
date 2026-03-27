@@ -75,41 +75,26 @@ export default function App() {
 
   const isHome = state.phase === "home";
 
-  const topbarSearchPkg = state.phase !== "home" && state.phase !== "loading"
-    ? state.phase === "result" ? state.result.package : state.pkg
-    : "";
-  const topbarV1 = state.phase !== "home"
-    ? state.phase === "result" ? state.result.v1 : (state as any).v1
-    : "";
-  const topbarV2 = state.phase !== "home"
-    ? state.phase === "result" ? state.result.v2 : (state as any).v2
-    : "";
+  function goHome() {
+    window.history.pushState({}, "", "/");
+    setState({ phase: "home" });
+  }
 
   return (
     <div className="app">
       {/* ── Topbar ── */}
       <header className="topbar">
-        <div
-          className="topbar-logo"
-          onClick={() => {
-            window.history.pushState({}, "", "/");
-            setState({ phase: "home" });
-          }}
-        >
+        <div className="topbar-logo" onClick={goHome}>
           <span className="topbar-logo-icon">📦</span>
           PyPI Diff
         </div>
 
+        <div className="topbar-spacer" />
+
         {!isHome && (
-          <div className="topbar-search">
-            <SearchForm
-              compact
-              initialPkg={topbarSearchPkg}
-              initialV1={topbarV1}
-              initialV2={topbarV2}
-              onCompare={compare}
-            />
-          </div>
+          <button className="btn btn-ghost btn-sm" onClick={goHome}>
+            ← Home
+          </button>
         )}
 
         <button
