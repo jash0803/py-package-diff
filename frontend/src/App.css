@@ -68,7 +68,7 @@ body {
 }
 
 /* ── Layout ────────────────────────────────────────────────── */
-.app { display: flex; flex-direction: column; min-height: 100vh; }
+.app { display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
 
 /* ── Topbar ────────────────────────────────────────────────── */
 .topbar {
@@ -105,6 +105,8 @@ body {
   flex: 1;
   padding: 60px 24px;
   gap: 32px;
+  overflow-y: auto;
+  min-height: 0;
 }
 .hero-title {
   font-size: 36px;
@@ -223,6 +225,8 @@ body {
   flex: 1;
   gap: 16px;
   padding: 60px;
+  min-height: 0;
+  overflow: hidden;
 }
 .spinner {
   width: 36px; height: 36px;
@@ -242,6 +246,8 @@ body {
   flex: 1;
   gap: 12px;
   padding: 60px;
+  min-height: 0;
+  overflow: hidden;
 }
 .error-icon { font-size: 36px; }
 .error-msg { color: var(--red); font-size: 14px; max-width: 480px; text-align: center; }
@@ -528,8 +534,33 @@ body {
 .empty-result-title { font-size: 18px; font-weight: 700; }
 .empty-result-sub { color: var(--text-muted); font-size: 14px; }
 
-/* ── Scrollbars ────────────────────────────────────────────── */
+/* ── Scrollbars (global) ───────────────────────────────────── */
 ::-webkit-scrollbar { width: 8px; height: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--bg-4); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+/* ── Sidebar scrollbar — thin, accent-tinted pill ──────────── */
+.sidebar-list { scrollbar-width: thin; scrollbar-color: var(--accent-dim) transparent; }
+.sidebar-list::-webkit-scrollbar { width: 4px; }
+.sidebar-list::-webkit-scrollbar-track { background: transparent; }
+.sidebar-list::-webkit-scrollbar-thumb {
+  background: var(--accent-dim);
+  border-radius: 4px;
+}
+.sidebar-list::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ── Diff panel scrollbar — wider track with visible groove ─── */
+.diff-panel { scrollbar-width: thin; scrollbar-color: var(--bg-4) var(--bg-2); }
+.diff-panel::-webkit-scrollbar { width: 10px; height: 10px; }
+.diff-panel::-webkit-scrollbar-track {
+  background: var(--bg-2);
+  border-left: 1px solid var(--border);
+}
+.diff-panel::-webkit-scrollbar-thumb {
+  background: var(--bg-4);
+  border-radius: 0;
+  border-left: 1px solid var(--border);
+}
+.diff-panel::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+.diff-panel::-webkit-scrollbar-corner { background: var(--bg-2); }

@@ -158,7 +158,7 @@ export default function App() {
       )}
 
       {state.phase === "result" && (
-        <div style={{ display: "flex", flexDirection: "column", flex: 1, overflow: "hidden" }}>
+        <div style={{ display: "flex", flexDirection: "column", flex: 1, minHeight: 0, overflow: "hidden" }}>
           <DiffView result={state.result} />
         </div>
       )}
